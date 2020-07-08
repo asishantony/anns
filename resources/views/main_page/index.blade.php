@@ -12,14 +12,14 @@
     
     <link rel="stylesheet" href={{asset("css/pages/main_page/owl.carousel.min.css")}}>
     <link rel="stylesheet" href={{asset("css/pages/main_page/owl.theme.default.min.css")}}>
-    <link rel="stylesheet" href={{asset("css/pages/main_page/magnific-popup.css")}}>
+    {{-- <link rel="stylesheet" href={{asset("css/pages/main_page/magnific-popup.css")}}> --}}
 
     <link rel="stylesheet" href={{asset("css/pages/main_page/aos.css")}}>
 
     <link rel="stylesheet" href={{asset("css/pages/main_page/ionicons.min.css")}}>
 
-    <link rel="stylesheet" href={{asset("css/pages/main_page/bootstrap-datepicker.css")}}>
-    <link rel="stylesheet" href={{asset("css/pages/main_page/jquery.timepicker.css")}}>
+    {{-- <link rel="stylesheet" href={{asset("css/pages/main_page/bootstrap-datepicker.css")}}> --}}
+    {{-- <link rel="stylesheet" href={{asset("css/pages/main_page/jquery.timepicker.css")}}> --}}
 
     
     <link rel="stylesheet" href={{asset("css/pages/main_page/flaticon.css")}}>
@@ -59,16 +59,16 @@
 	        <span class="oi oi-menu"></span> Menu
 	      </button>
 	      <p class="button-custom order-lg-last mb-0"><a href="appointment.html" class="btn btn-secondary py-2 px-3">Make An Appointment</a></p>
-	      <p class="button-custom order-lg-last mb-0"><a href="{{route('home')}}" class="btn btn-primary py-2 px-3">Login</a></p>
+	      <p class="button-custom order-lg-last mb-0"><a href="{{route('login')}}" class="btn btn-primary py-2 px-3">Login</a></p>
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav mr-auto">
-	        	<li class="nav-item active"><a href="{{route('home')}}" class="nav-link pl-0">Home</a></li>
+	        	<li class="nav-item active"><a href="{{route('home_page')}}" class="nav-link pl-0">Home</a></li>
 	        	<li class="nav-item"><a href="#about" class="nav-link">About</a></li>
 	        	<li class="nav-item"><a href="#doctor" class="nav-link">Doctor</a></li>
 	        	<li class="nav-item"><a href="#department" class="nav-link">Departments</a></li>
 	        	{{-- <li class="nav-item"><a href="pricing.html" class="nav-link">Pricing</a></li> --}}
 	        	{{-- <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li> --}}
-	          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+	          {{-- <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li> --}}
 	        </ul>
 	      </div>
 	    </div>
@@ -81,7 +81,7 @@
         <div class="container">
           <div class="row no-gutters slider-text align-items-center justify-content-start" data-scrollax-parent="true">
           <div class="col-md-6 text ftco-animate">
-            <h1 class="mb-4">Helping Your <span>Stay Happy One</span></h1>
+            <h1 class="mb-4">We love your smile <span>There’s no better reward.</span></h1>
             <h3 class="subheading">Everyday We Bring Hope and Smile to the Patient We Serve</h3>
             <p><a href="#" class="btn btn-secondary px-4 py-3 mt-3">Book an Appointment</a></p>
           </div>
@@ -162,19 +162,19 @@
 					<div class="col-md-7 wrap-about py-4 py-md-5 ftco-animate">
 	          <div class="heading-section mb-5">
 	          	<div class="pl-md-5 ml-md-5">
-		          	<span class="subheading">About Dr.care</span>
-		            <h2 class="mb-4" style="font-size: 28px;">Medical specialty concerned with the care of acutely ill hospitalized patients</h2>
+		          	<span class="subheading">About Anns Dental Clinic</span>
+		            <h2 class="mb-4" style="font-size: 28px;">We love to see you smile — there’s no better reward.</h2>
 	            </div>
 	          </div>
 	          <div class="pl-md-5 ml-md-5 mb-5">
-							<p>On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word.</p>
+							<p>Since 2007, Anns Dental Clinic has been proud to combine modern techniques and high-tech equipment. Dr. Biji and his team deliver a personalized and comfortable dental care experience unlike any other dentist.</p>
 							<div class="row mt-5 pt-2">
 								<div class="col-lg-6">
 									<div class="services-2 d-flex">
 										<div class="icon mt-2 mr-3 d-flex justify-content-center align-items-center"><span class="flaticon-first-aid-kit"></span></div>
 										<div class="text">
-											<h3>Primary Care</h3>
-											<p>Far far away, behind the word mountains, far from the countries Vokalia.</p>
+											<h3>High Standards</h3>
+											<p>A standard of excellence in personalized dental care enables us to provide the quality dental services our patients deserve.</p>
 										</div>
 									</div>
 								</div>
@@ -182,8 +182,8 @@
 									<div class="services-2 d-flex">
 										<div class="icon mt-2 mr-3 d-flex justify-content-center align-items-center"><span class="flaticon-dropper"></span></div>
 										<div class="text">
-											<h3>Lab Test</h3>
-											<p>Far far away, behind the word mountains, far from the countries Vokalia.</p>
+											<h3>Safety</h3>
+											<p>We strictly maintain sterilization and cross contamination processes using standards recommended by the Indian Dental Association (IDA).</p>
 										</div>
 									</div>
 								</div>
@@ -191,8 +191,8 @@
 									<div class="services-2 d-flex">
 										<div class="icon mt-2 mr-3 d-flex justify-content-center align-items-center"><span class="flaticon-experiment-results"></span></div>
 										<div class="text">
-											<h3>Symptom Check</h3>
-											<p>Far far away, behind the word mountains, far from the countries Vokalia.</p>
+											<h3>Modern Tech</h3>
+											<p>We invest in the latest technology. These tools allow us to produce more accurate diagnoses, craft finer restorations and make your experience more comfortable.</p>
 										</div>
 									</div>
 								</div>
@@ -691,16 +691,16 @@
         <div class="row mb-5">
           <div class="col-md">
             <div class="ftco-footer-widget mb-5">
-              <h2 class="ftco-heading-2 logo">Dr.<span>care</span></h2>
-              <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+              <h2 class="ftco-heading-2 logo">Anns <span>Dental Clinic</span></h2>
+              {{-- <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p> --}}
             </div>
             <div class="ftco-footer-widget mb-5">
             	<h2 class="ftco-heading-2">Have a Questions?</h2>
             	<div class="block-23 mb-3">
 	              <ul>
 	                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
-	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
-	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+91 8281360978</span></a></li>
+	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@annsdental.com</span></a></li>
 	              </ul>
 	            </div>
 
@@ -715,14 +715,14 @@
             <div class="ftco-footer-widget mb-5 ml-md-4">
               <h2 class="ftco-heading-2">Links</h2>
               <ul class="list-unstyled">
-                <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>Home</a></li>
-                <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>About</a></li>
-                <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>Services</a></li>
-                <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>Deparments</a></li>
-                <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>Contact</a></li>
+                <li><a href="{{route('home_page')}}"><span class="ion-ios-arrow-round-forward mr-2"></span>Home</a></li>
+                <li><a href="#about"><span class="ion-ios-arrow-round-forward mr-2"></span>About</a></li>
+                {{-- <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>Services</a></li> --}}
+                {{-- <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>Deparments</a></li> --}}
+                {{-- <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>Contact</a></li> --}}
               </ul>
             </div>
-            <div class="ftco-footer-widget mb-5 ml-md-4">
+            {{-- <div class="ftco-footer-widget mb-5 ml-md-4">
               <h2 class="ftco-heading-2">Services</h2>
               <ul class="list-unstyled">
                 <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>Neurolgy</a></li>
@@ -731,9 +731,9 @@
                 <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>Cardiology</a></li>
                 <li><a href="#"><span class="ion-ios-arrow-round-forward mr-2"></span>Surgery</a></li>
               </ul>
-            </div>
+            </div> --}}
           </div>
-          <div class="col-md">
+          {{-- <div class="col-md">
             <div class="ftco-footer-widget mb-5">
               <h2 class="ftco-heading-2">Recent Blog</h2>
               <div class="block-21 mb-4 d-flex">
@@ -759,13 +759,13 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> --}}
           <div class="col-md">
           	<div class="ftco-footer-widget mb-5">
             	<h2 class="ftco-heading-2">Opening Hours</h2>
-            	<h3 class="open-hours pl-4"><span class="ion-ios-time mr-3"></span>We are open 24/7</h3>
+            	<h3 class="open-hours pl-4"><span class="ion-ios-time mr-3"></span>We open at 9:00 AM</h3>
             </div>
-            <div class="ftco-footer-widget mb-5">
+            {{-- <div class="ftco-footer-widget mb-5">
             	<h2 class="ftco-heading-2">Subscribe Us!</h2>
               <form action="#" class="subscribe-form">
                 <div class="form-group">
@@ -773,14 +773,14 @@
                   <input type="submit" value="Subscribe" class="form-control submit px-3">
                 </div>
               </form>
-            </div>
+            </div> --}}
           </div>
         </div>
         <div class="row">
           <div class="col-md-12 text-center">
 
-            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+            <p>
+  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://lazycoders.live" target="_blank">lazycoders</a>
   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
           </div>
         </div>
@@ -801,14 +801,14 @@
   <script src={{asset("js/main_page/jquery.waypoints.min.js")}}></script>
   <script src={{asset("js/main_page/jquery.stellar.min.js")}}></script>
   <script src={{asset("js/main_page/owl.carousel.min.js")}}></script>
-  <script src={{asset("js/main_page/jquery.magnific-popup.min.js")}}></script>
+  {{-- <script src={{asset("js/main_page/jquery.magnific-popup.min.js")}}></script> --}}
   <script src={{asset("js/main_page/aos.js")}}></script>
-  <script src={{asset("js/main_page/jquery.animateNumber.min.js")}}></script>
-  <script src={{asset("js/main_page/bootstrap-datepicker.js")}}></script>
-  <script src={{asset("js/main_page/jquery.timepicker.min.js")}}></script>
+  {{-- <script src={{asset("js/main_page/jquery.animateNumber.min.js")}}></script> --}}
+  {{-- <script src={{asset("js/main_page/bootstrap-datepicker.js")}}></script> --}}
+  {{-- <script src={{asset("js/main_page/jquery.timepicker.min.js")}}></script> --}}
   <script src={{asset("js/main_page/scrollax.min.js")}}></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-  <script src={{asset("js/main_page/google-map.js")}}></script>
+  {{-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script> --}}
+  {{-- <script src={{asset("js/main_page/google-map.js")}}></script> --}}
   <script src={{asset("js/main_page/main.js")}}></script>
     
   </body>
