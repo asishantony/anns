@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Dr.care - Free Bootstrap 4 Template by Colorlib</title>
+    <title>Ann's Dental</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+    <link rel="icon" href="{{asset('images/main_page/favicon.ico')}}" />
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:100,200,300,400,500,600,700,800,900" rel="stylesheet">
 
     <link rel="stylesheet" href={{asset("css/pages/main_page/open-iconic-bootstrap.min.css")}}>
@@ -31,7 +31,8 @@
     	<div class="container">
     		<div class="row no-gutters d-flex align-items-start align-items-center px-3 px-md-0">
     			<div class="col-lg-2 pr-4 align-items-center">
-		    		<a class="navbar-brand" href="index.html">Dr.<span>care</span></a>
+				{{-- <a class="navbar-brand" href="{{route('home')}}">Ann's <span>Dental</span></a> --}}
+				<a href="{{route('home_page')}}"><img src="{{asset('images/main_page/logo.png')}}" alt="Ann's" class="img-fluid" ></a>
 	    		</div>
 	    		<div class="col-lg-10 d-none d-md-block">
 		    		<div class="row d-flex">
@@ -41,11 +42,11 @@
 					    </div>
 					    <div class="col-md pr-4 d-flex topper align-items-center">
 					    	<div class="icon bg-white mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
-						    <span class="text">Email: youremail@email.com</span>
+						    <span class="text">Email: info@annsdental.com</span>
 					    </div>
 					    <div class="col-md pr-4 d-flex topper align-items-center">
 					    	<div class="icon bg-white mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
-						    <span class="text">Phone: + 1235 2355 98</span>
+						    <span class="text">Phone: +91 8281360978</span>
 					    </div>
 				    </div>
 			    </div>
@@ -58,14 +59,15 @@
 	        <span class="oi oi-menu"></span> Menu
 	      </button>
 	      <p class="button-custom order-lg-last mb-0"><a href="appointment.html" class="btn btn-secondary py-2 px-3">Make An Appointment</a></p>
+	      <p class="button-custom order-lg-last mb-0"><a href="{{route('home')}}" class="btn btn-primary py-2 px-3">Login</a></p>
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav mr-auto">
-	        	<li class="nav-item active"><a href="index.html" class="nav-link pl-0">Home</a></li>
-	        	<li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-	        	<li class="nav-item"><a href="doctor.html" class="nav-link">Doctor</a></li>
-	        	<li class="nav-item"><a href="department.html" class="nav-link">Departments</a></li>
-	        	<li class="nav-item"><a href="pricing.html" class="nav-link">Pricing</a></li>
-	        	<li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+	        	<li class="nav-item active"><a href="{{route('home')}}" class="nav-link pl-0">Home</a></li>
+	        	<li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+	        	<li class="nav-item"><a href="#doctor" class="nav-link">Doctor</a></li>
+	        	<li class="nav-item"><a href="#department" class="nav-link">Departments</a></li>
+	        	{{-- <li class="nav-item"><a href="pricing.html" class="nav-link">Pricing</a></li> --}}
+	        	{{-- <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li> --}}
 	          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
 	        </ul>
 	      </div>
@@ -81,7 +83,7 @@
           <div class="col-md-6 text ftco-animate">
             <h1 class="mb-4">Helping Your <span>Stay Happy One</span></h1>
             <h3 class="subheading">Everyday We Bring Hope and Smile to the Patient We Serve</h3>
-            <p><a href="#" class="btn btn-secondary px-4 py-3 mt-3">View our works</a></p>
+            <p><a href="#" class="btn btn-secondary px-4 py-3 mt-3">Book an Appointment</a></p>
           </div>
         </div>
         </div>
@@ -92,9 +94,9 @@
         <div class="container">
           <div class="row no-gutters slider-text align-items-center justify-content-start" data-scrollax-parent="true">
           <div class="col-md-6 text ftco-animate">
-            <h1 class="mb-4">We Care <span>About Your Health</span></h1>
-            <h3 class="subheading">Your Health is Our Top Priority with Comprehensive, Affordable medical.</h3>
-            <p><a href="#" class="btn btn-secondary px-4 py-3 mt-3">View our works</a></p>
+            <h1 class="mb-4">We Care <span>About Your Teeth</span></h1>
+            <h3 class="subheading">Your Teeth is Our Top Priority with Comprehensive, Affordable medical.</h3>
+            <p><a href="#" class="btn btn-secondary px-4 py-3 mt-3">Book an Appointment</a></p>
           </div>
         </div>
         </div>
@@ -152,7 +154,7 @@
 			</div>
 		</section>
 		
-		<section class="ftco-section ftco-no-pt ftc-no-pb">
+		<section class="ftco-section ftco-no-pt ftc-no-pb" id="about">
 			<div class="container">
 				<div class="row no-gutters">
 					<div class="col-md-5 p-md-5 img img-2 mt-5 mt-md-0" style="background-image: url(images/main_page/about.jpg);">
@@ -210,7 +212,7 @@
 			</div>
 		</section>
 		
-		<section class="ftco-intro" style="background-image: url(images/main_page/bg_3.jpg);" data-stellar-background-ratio="0.5">
+		{{-- <section class="ftco-intro" style="background-image: url(images/main_page/bg_3.jpg);" data-stellar-background-ratio="0.5">
 			<div class="overlay"></div>
 			<div class="container">
 				<div class="row">
@@ -226,7 +228,7 @@
 			</div>
 		</section>
 
-    <section class="ftco-section">
+    <section class="ftco-section" id="department">
     	<div class="container">
     		<div class="row justify-content-center mb-5 pb-2">
           <div class="col-md-8 text-center heading-section ftco-animate">
@@ -508,9 +510,9 @@
 	        </div>
         </div>
     	</div>
-    </section>
+    </section> --}}
 		
-		<section class="ftco-section ftco-no-pt">
+		<section class="ftco-section ftco-no-pt" id="doctor">
 			<div class="container">
 				<div class="row justify-content-center mb-5 pb-2">
           <div class="col-md-8 text-center heading-section ftco-animate">
@@ -603,276 +605,6 @@
 				</div>
 			</div>
 		</section>
-
-    <section class="ftco-section testimony-section bg-light">
-      <div class="container">
-        <div class="row justify-content-center mb-5 pb-2">
-          <div class="col-md-8 text-center heading-section ftco-animate">
-          	<span class="subheading">Testimonials</span>
-            <h2 class="mb-4">Our Patients Says About Us</h2>
-            <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country</p>
-          </div>
-        </div>
-        <div class="row ftco-animate justify-content-center">
-          <div class="col-md-8">
-            <div class="carousel-testimony owl-carousel">
-              <div class="item">
-                <div class="testimony-wrap d-flex">
-                  <div class="user-img mr-4" style="background-image: url(images/main_page/person_1.jpg)">
-                  </div>
-                  <div class="text ml-2 bg-light">
-                  	<span class="quote d-flex align-items-center justify-content-center">
-                      <i class="icon-quote-left"></i>
-                    </span>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                    <p class="name">Racky Henderson</p>
-                    <span class="position">Farmer</span>
-                  </div>
-                </div>
-              </div>
-              <div class="item">
-                <div class="testimony-wrap d-flex">
-                  <div class="user-img mr-4" style="background-image: url(images/main_page/person_2.jpg)">
-                  </div>
-                  <div class="text ml-2 bg-light">
-                  	<span class="quote d-flex align-items-center justify-content-center">
-                      <i class="icon-quote-left"></i>
-                    </span>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                    <p class="name">Henry Dee</p>
-                    <span class="position">Businessman</span>
-                  </div>
-                </div>
-              </div>
-              <div class="item">
-                <div class="testimony-wrap d-flex">
-                  <div class="user-img mr-4" style="background-image: url(images/main_page/person_3.jpg)">
-                  </div>
-                  <div class="text ml-2 bg-light">
-                  	<span class="quote d-flex align-items-center justify-content-center">
-                      <i class="icon-quote-left"></i>
-                    </span>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                    <p class="name">Mark Huff</p>
-                    <span class="position">Students</span>
-                  </div>
-                </div>
-              </div>
-              <div class="item">
-                <div class="testimony-wrap d-flex">
-                  <div class="user-img mr-4" style="background-image: url(images/main_page/person_4.jpg)">
-                  </div>
-                  <div class="text ml-2 bg-light">
-                  	<span class="quote d-flex align-items-center justify-content-center">
-                      <i class="icon-quote-left"></i>
-                    </span>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                    <p class="name">Rodel Golez</p>
-                    <span class="position">Striper</span>
-                  </div>
-                </div>
-              </div>
-              <div class="item">
-                <div class="testimony-wrap d-flex">
-                  <div class="user-img mr-4" style="background-image: url(images/main_page/person_1.jpg)">
-                  </div>
-                  <div class="text ml-2 bg-light">
-                  	<span class="quote d-flex align-items-center justify-content-center">
-                      <i class="icon-quote-left"></i>
-                    </span>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-                    <p class="name">Ken Bosh</p>
-                    <span class="position">Manager</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="ftco-section ftco-no-pt ftco-no-pb ftco-counter img" id="section-counter" style="background-image: url(images/main_page/bg_3.jpg);" data-stellar-background-ratio="0.5">
-    	<div class="container">
-    		<div class="row">
-    			<div class="col-md-6 py-5 pr-md-5">
-	          <div class="heading-section heading-section-white ftco-animate mb-5">
-	          	<span class="subheading">Consultation</span>
-	            <h2 class="mb-4">Free Consultation</h2>
-	            <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-	          </div>
-	          <form action="#" class="appointment-form ftco-animate">
-	    				<div class="d-md-flex">
-		    				<div class="form-group">
-		    					<input type="text" class="form-control" placeholder="First Name">
-		    				</div>
-		    				<div class="form-group ml-md-4">
-		    					<input type="text" class="form-control" placeholder="Last Name">
-		    				</div>
-	    				</div>
-	    				<div class="d-md-flex">
-	    					<div class="form-group">
-		    					<div class="form-field">
-          					<div class="select-wrap">
-                      <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                      <select name="" id="" class="form-control">
-                      	<option value="">Select Your Services</option>
-                        <option value="">Neurology</option>
-                        <option value="">Cardiology</option>
-                        <option value="">Dental</option>
-                        <option value="">Ophthalmology</option>
-                        <option value="">Other Services</option>
-                      </select>
-                    </div>
-		              </div>
-		    				</div>
-	    					<div class="form-group ml-md-4">
-		    					<input type="text" class="form-control" placeholder="Phone">
-		    				</div>
-	    				</div>
-	    				<div class="d-md-flex">
-		    				<div class="form-group">
-		    					<div class="input-wrap">
-		            		<div class="icon"><span class="ion-md-calendar"></span></div>
-		            		<input type="text" class="form-control appointment_date" placeholder="Date">
-	            		</div>
-		    				</div>
-		    				<div class="form-group ml-md-4">
-		    					<div class="input-wrap">
-		            		<div class="icon"><span class="ion-ios-clock"></span></div>
-		            		<input type="text" class="form-control appointment_time" placeholder="Time">
-	            		</div>
-		    				</div>
-	    				</div>
-	    				<div class="d-md-flex">
-	    					<div class="form-group">
-		              <textarea name="" id="" cols="30" rows="2" class="form-control" placeholder="Message"></textarea>
-		            </div>
-		            <div class="form-group ml-md-4">
-		              <input type="submit" value="Appointment" class="btn btn-secondary py-3 px-4">
-		            </div>
-	    				</div>
-	    			</form>
-    			</div>
-    			<div class="col-lg-6 p-5 bg-counter aside-stretch">
-						<h3 class="vr">About Dr.Care Facts</h3>
-    				<div class="row pt-4 mt-1">
-		          <div class="col-md-6 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18 p-5 bg-light">
-		              <div class="text">
-		                <strong class="number" data-number="30">0</strong>
-		                <span>Years of Experienced</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-6 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18 p-5 bg-light">
-		              <div class="text">
-		                <strong class="number" data-number="4500">0</strong>
-		                <span>Happy Patients</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-6 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18 p-5 bg-light">
-		              <div class="text">
-		                <strong class="number" data-number="84">0</strong>
-		                <span>Number of Doctors</span>
-		              </div>
-		            </div>
-		          </div>
-		          <div class="col-md-6 d-flex justify-content-center counter-wrap ftco-animate">
-		            <div class="block-18 p-5 bg-light">
-		              <div class="text">
-		                <strong class="number" data-number="300">0</strong>
-		                <span>Number of Staffs</span>
-		              </div>
-		            </div>
-		          </div>
-	          </div>
-          </div>
-        </div>
-    	</div>
-    </section>
-
-    <section class="ftco-section bg-light">
-    	<div class="container">
-    		<div class="row justify-content-center mb-5 pb-2">
-          <div class="col-md-8 text-center heading-section ftco-animate">
-          	<span class="subheading">Pricing</span>
-            <h2 class="mb-4">Our Pricing</h2>
-            <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country</p>
-          </div>
-        </div>
-    		<div class="row">
-        	<div class="col-md-3 ftco-animate">
-        		<div class="pricing-entry pb-5 text-center">
-        			<div>
-	        			<h3 class="mb-4">Basic</h3>
-	        			<p><span class="price">$24.50</span> <span class="per">/ session</span></p>
-	        		</div>
-        			<ul>
-        				<li>Diagnostic Services</li>
-								<li>Professional Consultation</li>
-								<li>Tooth Implants</li>
-								<li>Surgical Extractions</li>
-								<li>Teeth Whitening</li>
-        			</ul>
-        			<p class="button text-center"><a href="#" class="btn btn-primary px-4 py-3">Get Offer</a></p>
-        		</div>
-        	</div>
-        	<div class="col-md-3 ftco-animate">
-        		<div class="pricing-entry pb-5 text-center">
-        			<div>
-	        			<h3 class="mb-4">Standard</h3>
-	        			<p><span class="price">$34.50</span> <span class="per">/ session</span></p>
-	        		</div>
-        			<ul>
-        				<li>Diagnostic Services</li>
-								<li>Professional Consultation</li>
-								<li>Tooth Implants</li>
-								<li>Surgical Extractions</li>
-								<li>Teeth Whitening</li>
-        			</ul>
-        			<p class="button text-center"><a href="#" class="btn btn-primary px-4 py-3">Get Offer</a></p>
-        		</div>
-        	</div>
-        	<div class="col-md-3 ftco-animate">
-        		<div class="pricing-entry active pb-5 text-center">
-        			<div>
-	        			<h3 class="mb-4">Premium</h3>
-	        			<p><span class="price">$54.50</span> <span class="per">/ session</span></p>
-	        		</div>
-        			<ul>
-        				<li>Diagnostic Services</li>
-								<li>Professional Consultation</li>
-								<li>Tooth Implants</li>
-								<li>Surgical Extractions</li>
-								<li>Teeth Whitening</li>
-        			</ul>
-        			<p class="button text-center"><a href="#" class="btn btn-primary px-4 py-3">Get Offer</a></p>
-        		</div>
-        	</div>
-        	<div class="col-md-3 ftco-animate">
-        		<div class="pricing-entry pb-5 text-center">
-        			<div>
-	        			<h3 class="mb-4">Platinum</h3>
-	        			<p><span class="price">$89.50</span> <span class="per">/ session</span></p>
-	        		</div>
-        			<ul>
-        				<li>Diagnostic Services</li>
-								<li>Professional Consultation</li>
-								<li>Tooth Implants</li>
-								<li>Surgical Extractions</li>
-								<li>Teeth Whitening</li>
-        			</ul>
-        			<p class="button text-center"><a href="#" class="btn btn-primary px-4 py-3">Get Offer</a></p>
-        		</div>
-        	</div>
-        </div>
-    	</div>
-    </section>
-
 		<section class="ftco-section bg-light">
 			<div class="container">
 				<div class="row justify-content-center mb-5 pb-2">
