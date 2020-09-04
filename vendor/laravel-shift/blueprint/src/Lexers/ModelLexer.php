@@ -4,6 +4,7 @@ namespace Blueprint\Lexers;
 
 use Blueprint\Contracts\Lexer;
 use Blueprint\Models\Column;
+use Blueprint\Models\Index;
 use Blueprint\Models\Model;
 use Illuminate\Support\Str;
 
@@ -95,6 +96,7 @@ class ModelLexer implements Lexer
         'primary' => 'primary',
         'foreign' => 'foreign',
         'ondelete' => 'onDelete',
+        'comment' => 'comment',
     ];
 
     public function analyze(array $tokens): array
@@ -165,6 +167,13 @@ class ModelLexer implements Lexer
             unset($columns['relationships']);
         }
 
+        if (isset($columns['indexes'])) {
+            foreach ($columns['indexes'] as $index) {
+                $model->addIndex(new Index(key($index), array_map('trim', explode(',', current($index)))));
+            }
+            unset($columns['indexes']);
+        }
+
         if (!isset($columns['id']) && $model->usesPrimaryKey()) {
             $column = $this->buildColumn('id', 'id');
             $model->addColumn($column);
@@ -206,7 +215,7 @@ class ModelLexer implements Lexer
         $data_type = null;
         $modifiers = [];
 
-        $tokens = preg_split('#".*?"(*SKIP)(*FAIL)|\s+#', $definition);
+        $tokens = preg_split('#("|\').*?\1(*SKIP)(*FAIL)|\s+#', $definition);
         foreach ($tokens as $token) {
             $parts = explode(':', $token);
             $value = $parts[0];
@@ -232,7 +241,7 @@ class ModelLexer implements Lexer
 
             if (isset(self::$modifiers[strtolower($value)])) {
                 $modifierAttributes = $parts[1] ?? null;
-                if (empty($modifierAttributes)) {
+                if ($modifierAttributes === null) {
                     $modifiers[] = self::$modifiers[strtolower($value)];
                 } else {
                     $modifiers[] = [self::$modifiers[strtolower($value)] => $modifierAttributes];

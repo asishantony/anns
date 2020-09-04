@@ -16,8 +16,11 @@ class BuildCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'blueprint:build 
+    protected $signature = 'blueprint:build
                             {draft? : The path to the draft file, default: draft.yaml or draft.yml }
+                            {--only= : Comma separated list of file classes to generate, skipping the rest }
+                            {--skip= : Comma separated list of file classes to skip, generating the rest }
+                            {--m|overwrite-migrations : Update existing migration files, if found }
                             ';
 
     /**
@@ -27,40 +30,44 @@ class BuildCommand extends Command
      */
     protected $description = 'Build components from a Blueprint draft';
 
-    /** @var Filesystem $files */
+    /** @var Filesystem */
     protected $files;
+
+    /** @var Builder */
+    private $builder;
 
     /**
      * @param Filesystem $files
+     * @param Builder $builder
      */
-    public function __construct(Filesystem $files)
+    public function __construct(Filesystem $files, Builder $builder)
     {
         parent::__construct();
 
         $this->files = $files;
+        $this->builder = $builder;
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return void
-     */
     public function handle()
     {
         $file = $this->argument('draft') ?? $this->defaultDraftFile();
 
-        if (!file_exists($file)) {
-            $this->error('Draft file could not be found: ' . ($file ?: 'draft.yaml'));
-            exit(1);
+        if (!$this->files->exists($file)) {
+            $this->error('Draft file could not be found: '.($file ?: 'draft.yaml'));
+            return 1;
         }
 
+        $only = $this->option('only') ?: '';
+        $skip = $this->option('skip') ?: '';
+        $overwriteMigrations = $this->option('overwrite-migrations') ?: false;
+
         $blueprint = resolve(Blueprint::class);
-        $generated = Builder::execute($blueprint, $this->files, $file);
+        $generated = $this->builder->execute($blueprint, $this->files, $file, $only, $skip, $overwriteMigrations);
 
         collect($generated)->each(function ($files, $action) {
-            $this->line(Str::studly($action) . ':', $this->outputStyle($action));
+            $this->line(Str::studly($action).':', $this->outputStyle($action));
             collect($files)->each(function ($file) {
-                $this->line('- ' . $file);
+                $this->line('- '.$file);
             });
 
             $this->line('');
@@ -92,14 +99,6 @@ class BuildCommand extends Command
 
     private function defaultDraftFile()
     {
-        if (file_exists('draft.yaml')) {
-            return 'draft.yaml';
-        }
-
-        if (file_exists('draft.yml')) {
-            return 'draft.yml';
-        }
-
-        return null;
+        return file_exists('draft.yml') ? 'draft.yml' : 'draft.yaml';
     }
 }

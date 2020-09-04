@@ -14,7 +14,7 @@ class Blueprint
 
     public static function relativeNamespace(string $fullyQualifiedClassName)
     {
-        $namespace = config('blueprint.namespace') . '\\';
+        $namespace = config('blueprint.namespace').'\\';
         $reference = ltrim($fullyQualifiedClassName, '\\');
 
         if (Str::startsWith($reference, $namespace)) {
@@ -67,15 +67,17 @@ class Blueprint
             $registry = array_merge($registry, $lexer->analyze($tokens));
         }
 
-        return $registry;
+        return new Tree($registry);
     }
 
-    public function generate(array $tree): array
+    public function generate(Tree $tree, array $only = [], array $skip = [], $overwriteMigrations = false): array
     {
         $components = [];
 
         foreach ($this->generators as $generator) {
-            $components = array_merge_recursive($components, $generator->output($tree));
+            if ($this->shouldGenerate($generator->types(), $only, $skip)) {
+                $components = array_merge_recursive($components, $generator->output($tree, $overwriteMigrations));
+            }
         }
 
         return $components;
@@ -105,5 +107,18 @@ class Blueprint
         }
 
         $this->registerGenerator($generator);
+    }
+
+    protected function shouldGenerate(array $types, array $only, array $skip): bool
+    {
+        if (count($only)) {
+            return collect($types)->intersect($only)->isNotEmpty();
+        }
+
+        if (count($skip)) {
+            return collect($types)->intersect($skip)->isEmpty();
+        }
+
+        return true;
     }
 }

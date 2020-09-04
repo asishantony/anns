@@ -1,4 +1,0 @@
-    public function DummyName()
-    {
-        return null;
-    }

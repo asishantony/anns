@@ -4,7 +4,6 @@ namespace Blueprint\Generators;
 
 use Blueprint\Blueprint;
 use Blueprint\Contracts\Generator;
-use Blueprint\Models\Model;
 use Blueprint\Models\Controller;
 use Blueprint\Models\Statements\DispatchStatement;
 use Blueprint\Models\Statements\EloquentStatement;
@@ -17,6 +16,7 @@ use Blueprint\Models\Statements\RespondStatement;
 use Blueprint\Models\Statements\SendStatement;
 use Blueprint\Models\Statements\SessionStatement;
 use Blueprint\Models\Statements\ValidateStatement;
+use Blueprint\Tree;
 use Illuminate\Support\Str;
 
 class ControllerGenerator implements Generator
@@ -28,23 +28,24 @@ class ControllerGenerator implements Generator
 
     private $imports = [];
 
-    private $models = [];
+    /** @var Tree */
+    private $tree;
 
     public function __construct($files)
     {
         $this->files = $files;
     }
 
-    public function output(array $tree): array
+    public function output(Tree $tree): array
     {
+        $this->tree = $tree;
+
         $output = [];
 
-        $stub = $this->files->stub('controller/class.stub');
-
-        $this->registerModels($tree);
+        $stub = $this->files->stub('controller.class.stub');
 
         /** @var \Blueprint\Models\Controller $controller */
-        foreach ($tree['controllers'] as $controller) {
+        foreach ($tree->controllers() as $controller) {
             $this->addImport($controller, 'Illuminate\\Http\\Request');
 
             if ($controller->fullyQualifiedNamespace() !== 'App\\Http\\Controllers') {
@@ -65,93 +66,93 @@ class ControllerGenerator implements Generator
         return $output;
     }
 
+    public function types(): array
+    {
+        return ['controllers'];
+    }
+
     protected function populateStub(string $stub, Controller $controller)
     {
-        $stub = str_replace('DummyNamespace', $controller->fullyQualifiedNamespace(), $stub);
-        $stub = str_replace('DummyClass', $controller->className(), $stub);
-        $stub = str_replace('// methods...', $this->buildMethods($controller), $stub);
-        $stub = str_replace('// imports...', $this->buildImports($controller), $stub);
+        $stub = str_replace('{{ namespace }}', $controller->fullyQualifiedNamespace(), $stub);
+        $stub = str_replace('{{ class }}', $controller->className(), $stub);
+        $stub = str_replace('{{ methods }}', $this->buildMethods($controller), $stub);
+        $stub = str_replace('{{ imports }}', $this->buildImports($controller), $stub);
 
         return $stub;
     }
 
-    private function buildMethods(Controller $controller)
+    protected function buildMethods(Controller $controller)
     {
-        $template = $this->files->stub('controller/method.stub');
+        $template = $this->files->stub('controller.method.stub');
 
         $methods = '';
 
         foreach ($controller->methods() as $name => $statements) {
-            $method = str_replace('DummyMethod', $name, $template);
+            $method = str_replace('{{ method }}', $name, $template);
 
             if (in_array($name, ['edit', 'update', 'show', 'destroy'])) {
                 $context = Str::singular($controller->prefix());
                 $reference = $this->fullyQualifyModelReference($controller->namespace(), Str::camel($context));
-                $variable = '$' . Str::camel($context);
+                $variable = '$'.Str::camel($context);
 
                 // TODO: verify controller prefix references a model
                 $search = '     * @return \\Illuminate\\Http\\Response';
-                $method = str_replace($search, '     * @param \\' . $reference . ' ' . $variable . PHP_EOL . $search, $method);
+                $method = str_replace($search, '     * @param \\'.$reference.' '.$variable.PHP_EOL.$search, $method);
 
                 $search = '(Request $request';
-                $method = str_replace($search, $search . ', ' . $context . ' ' . $variable, $method);
+                $method = str_replace($search, $search.', '.$context.' '.$variable, $method);
                 $this->addImport($controller, $reference);
             }
 
             $body = '';
+            $using_validation = false;
+
             foreach ($statements as $statement) {
                 if ($statement instanceof SendStatement) {
-                    $body .= self::INDENT . $statement->output() . PHP_EOL;
+                    $body .= self::INDENT.$statement->output().PHP_EOL;
                     if ($statement->type() === SendStatement::TYPE_NOTIFICATION_WITH_FACADE) {
                         $this->addImport($controller, 'Illuminate\\Support\\Facades\\Notification');
-                        $this->addImport($controller, config('blueprint.namespace') . '\\Notification\\' . $statement->mail());
+                        $this->addImport($controller, config('blueprint.namespace').'\\Notification\\'.$statement->mail());
                     } elseif ($statement->type() === SendStatement::TYPE_MAIL) {
                         $this->addImport($controller, 'Illuminate\\Support\\Facades\\Mail');
-                        $this->addImport($controller, config('blueprint.namespace') . '\\Mail\\' . $statement->mail());
+                        $this->addImport($controller, config('blueprint.namespace').'\\Mail\\'.$statement->mail());
                     }
                 } elseif ($statement instanceof ValidateStatement) {
-                    $class_name = $controller->name() . Str::studly($name) . 'Request';
+                    $using_validation = true;
+                    $class_name = $controller->name().Str::studly($name).'Request';
 
-                    $fqcn = config('blueprint.namespace') . '\\Http\\Requests\\' . ($controller->namespace() ? $controller->namespace() . '\\' : '') . $class_name;
+                    $fqcn = config('blueprint.namespace').'\\Http\\Requests\\'.($controller->namespace() ? $controller->namespace().'\\' : '').$class_name;
 
-                    $method = str_replace('\Illuminate\Http\Request $request', '\\' . $fqcn . ' $request', $method);
-                    $method = str_replace('(Request $request', '(' . $class_name . ' $request', $method);
+                    $method = str_replace('\Illuminate\Http\Request $request', '\\'.$fqcn.' $request', $method);
+                    $method = str_replace('(Request $request', '('.$class_name.' $request', $method);
 
                     $this->addImport($controller, $fqcn);
                 } elseif ($statement instanceof DispatchStatement) {
-                    $body .= self::INDENT . $statement->output() . PHP_EOL;
-                    $this->addImport($controller, config('blueprint.namespace') . '\\Jobs\\' . $statement->job());
+                    $body .= self::INDENT.$statement->output().PHP_EOL;
+                    $this->addImport($controller, config('blueprint.namespace').'\\Jobs\\'.$statement->job());
                 } elseif ($statement instanceof FireStatement) {
-                    $body .= self::INDENT . $statement->output() . PHP_EOL;
+                    $body .= self::INDENT.$statement->output().PHP_EOL;
                     if (!$statement->isNamedEvent()) {
-                        $this->addImport($controller, config('blueprint.namespace') . '\\Events\\' . $statement->event());
+                        $this->addImport($controller, config('blueprint.namespace').'\\Events\\'.$statement->event());
                     }
                 } elseif ($statement instanceof RenderStatement) {
-                    $body .= self::INDENT . $statement->output() . PHP_EOL;
+                    $body .= self::INDENT.$statement->output().PHP_EOL;
                 } elseif ($statement instanceof ResourceStatement) {
-                    $fqcn = config('blueprint.namespace') . '\\Http\\Resources\\' . ($controller->namespace() ? $controller->namespace() . '\\' : '') . $statement->name();
-
-                    $method = str_replace('* @return \\Illuminate\\Http\\Response', '* @return \\' . $fqcn, $method);
-
-                    $import = $fqcn;
-                    if (!$statement->collection()) {
-                        $import .= ' as ' . $statement->name() . 'Resource';
-                    }
-
-                    $this->addImport($controller, $import);
-
-                    $body .= self::INDENT . $statement->output() . PHP_EOL;
+                    $fqcn = config('blueprint.namespace').'\\Http\\Resources\\'.($controller->namespace() ? $controller->namespace().'\\' : '').$statement->name();
+                    $method = str_replace('* @return \\Illuminate\\Http\\Response', '* @return \\'.$fqcn, $method);
+                    $this->addImport($controller, $fqcn);
+                    $body .= self::INDENT.$statement->output().PHP_EOL;
                 } elseif ($statement instanceof RedirectStatement) {
-                    $body .= self::INDENT . $statement->output() . PHP_EOL;
+                    $body .= self::INDENT.$statement->output().PHP_EOL;
                 } elseif ($statement instanceof RespondStatement) {
-                    $body .= self::INDENT . $statement->output() . PHP_EOL;
+                    $body .= self::INDENT.$statement->output().PHP_EOL;
                 } elseif ($statement instanceof SessionStatement) {
-                    $body .= self::INDENT . $statement->output() . PHP_EOL;
+                    $body .= self::INDENT.$statement->output().PHP_EOL;
                 } elseif ($statement instanceof EloquentStatement) {
-                    $body .= self::INDENT . $statement->output($controller->prefix(), $name) . PHP_EOL;
+                    $body .= self::INDENT.$statement->output($controller->prefix(), $name, $using_validation).PHP_EOL;
                     $this->addImport($controller, $this->determineModel($controller, $statement->reference()));
                 } elseif ($statement instanceof QueryStatement) {
-                    $body .= self::INDENT . $statement->output($controller->prefix()) . PHP_EOL;
+                    $body .= self::INDENT.$statement->output($controller->prefix()).PHP_EOL;
                     $this->addImport($controller, $this->determineModel($controller, $statement->model()));
                 }
 
@@ -159,10 +160,10 @@ class ControllerGenerator implements Generator
             }
 
             if (!empty($body)) {
-                $method = str_replace('//', trim($body), $method);
+                $method = str_replace('{{ body }}', trim($body), $method);
             }
 
-            $methods .= PHP_EOL . $method;
+            $methods .= PHP_EOL.$method;
         }
 
         return trim($methods);
@@ -172,22 +173,22 @@ class ControllerGenerator implements Generator
     {
         $path = str_replace('\\', '/', Blueprint::relativeNamespace($controller->fullyQualifiedClassName()));
 
-        return Blueprint::appPath() . '/' . $path . '.php';
+        return Blueprint::appPath().'/'.$path.'.php';
     }
 
-    private function addImport(Controller $controller, $class)
-    {
-        $this->imports[$controller->name()][] = $class;
-    }
-
-    private function buildImports(Controller $controller)
+    protected function buildImports(Controller $controller)
     {
         $imports = array_unique($this->imports[$controller->name()]);
         sort($imports);
 
         return implode(PHP_EOL, array_map(function ($class) {
-            return 'use ' . $class . ';';
+            return 'use '.$class.';';
         }, $imports));
+    }
+
+    private function addImport(Controller $controller, $class)
+    {
+        $this->imports[$controller->name()][] = $class;
     }
 
     private function determineModel(Controller $controller, ?string $reference)
@@ -210,32 +211,12 @@ class ControllerGenerator implements Generator
         // Use respond-statement.php as test case.
 
         /** @var \Blueprint\Models\Model $model */
-        $model = $this->modelForContext($model_name);
+        $model = $this->tree->modelForContext($model_name);
 
         if (isset($model)) {
             return $model->fullyQualifiedClassName();
         }
 
-        return config('blueprint.namespace') . '\\' . ($sub_namespace ? $sub_namespace . '\\' : '') . $model_name;
-    }
-
-    private function modelForContext(string $context)
-    {
-        if (isset($this->models[Str::studly($context)])) {
-            return $this->models[Str::studly($context)];
-        }
-
-        $matches = array_filter(array_keys($this->models), function ($key) use ($context) {
-            return Str::endsWith($key, '/'.Str::studly($context));
-        });
-
-        if (count($matches) === 1) {
-            return $this->models[$matches[0]];
-        }
-    }
-
-    private function registerModels(array $tree)
-    {
-        $this->models = array_merge($tree['cache'] ?? [], $tree['models'] ?? []);
+        return config('blueprint.namespace').'\\'.($sub_namespace ? $sub_namespace.'\\' : '').$model_name;
     }
 }

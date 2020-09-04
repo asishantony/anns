@@ -7,6 +7,7 @@ use Blueprint\Contracts\Generator;
 use Blueprint\Models\Controller;
 use Blueprint\Models\Model;
 use Blueprint\Models\Statements\ResourceStatement;
+use Blueprint\Tree;
 use Illuminate\Support\Str;
 
 class ResourceGenerator implements Generator
@@ -17,30 +18,31 @@ class ResourceGenerator implements Generator
      */
     private $files;
 
-    private $models = [];
+    /** @var Tree */
+    private $tree;
 
     public function __construct($files)
     {
         $this->files = $files;
     }
 
-    public function output(array $tree): array
+    public function output(Tree $tree): array
     {
+        $this->tree = $tree;
+
         $output = [];
 
         $stub = $this->files->stub('resource.stub');
 
-        $this->registerModels($tree);
-
         /** @var \Blueprint\Models\Controller $controller */
-        foreach ($tree['controllers'] as $controller) {
+        foreach ($tree->controllers() as $controller) {
             foreach ($controller->methods() as $method => $statements) {
                 foreach ($statements as $statement) {
                     if (! $statement instanceof ResourceStatement) {
                         continue;
                     }
 
-                    $path = $this->getPath($statement->name());
+                    $path = $this->getPath(($controller->namespace() ? $controller->namespace().'/' : '').$statement->name());
 
                     if ($this->files->exists($path)) {
                         continue;
@@ -50,7 +52,7 @@ class ResourceGenerator implements Generator
                         $this->files->makeDirectory(dirname($path), 0755, true);
                     }
 
-                    $this->files->put($path, $this->populateStub($stub, $statement));
+                    $this->files->put($path, $this->populateStub($stub, $controller, $statement));
 
                     $output['created'][] = $path;
                 }
@@ -60,30 +62,39 @@ class ResourceGenerator implements Generator
         return $output;
     }
 
+    public function types(): array
+    {
+        return ['controllers', 'resources'];
+    }
+
     protected function getPath(string $name)
     {
         return Blueprint::appPath().'/Http/Resources/'.$name.'.php';
     }
 
-    protected function populateStub(string $stub, ResourceStatement $resource)
+    protected function populateStub(string $stub, Controller $controller, ResourceStatement $resource)
     {
-        $stub = str_replace('DummyNamespace', config('blueprint.namespace').'\\Http\\Resources', $stub);
-        $stub = str_replace('DummyImport', $resource->collection() ? 'Illuminate\\Http\\Resources\\Json\\ResourceCollection' : 'Illuminate\\Http\\Resources\\Json\\JsonResource', $stub);
-        $stub = str_replace('DummyParent', $resource->collection() ? 'ResourceCollection' : 'JsonResource', $stub);
-        $stub = str_replace('DummyClass', $resource->name(), $stub);
-        $stub = str_replace('DummyParent', $resource->collection() ? 'ResourceCollection' : 'JsonResource', $stub);
-        $stub = str_replace('DummyItem', $resource->collection() ? 'resource collection' : 'resource', $stub);
-        $stub = str_replace('// data...', $this->buildData($resource), $stub);
+        $namespace = config('blueprint.namespace')
+            .'\\Http\\Resources'
+            .($controller->namespace() ? '\\'.$controller->namespace() : '');
+
+        $stub = str_replace('{{ namespace }}', $namespace, $stub);
+        $stub = str_replace('{{ import }}', $resource->collection() ? 'Illuminate\\Http\\Resources\\Json\\ResourceCollection' : 'Illuminate\\Http\\Resources\\Json\\JsonResource', $stub);
+        $stub = str_replace('{{ parentClass }}', $resource->collection() ? 'ResourceCollection' : 'JsonResource', $stub);
+        $stub = str_replace('{{ class }}', $resource->name(), $stub);
+        $stub = str_replace('{{ parentClass }}', $resource->collection() ? 'ResourceCollection' : 'JsonResource', $stub);
+        $stub = str_replace('{{ resource }}', $resource->collection() ? 'resource collection' : 'resource', $stub);
+        $stub = str_replace('{{ body }}', $this->buildData($resource), $stub);
 
         return $stub;
     }
 
-    private function buildData(ResourceStatement $resource)
+    protected function buildData(ResourceStatement $resource)
     {
         $context = Str::singular($resource->reference());
 
         /** @var \Blueprint\Models\Model $model */
-        $model = $this->modelForContext($context);
+        $model = $this->tree->modelForContext($context);
 
         $data = [];
         if ($resource->collection()) {
@@ -109,25 +120,5 @@ class ResourceGenerator implements Generator
             'password',
             'remember_token',
         ]);
-    }
-
-    private function modelForContext(string $context)
-    {
-        if (isset($this->models[Str::studly($context)])) {
-            return $this->models[Str::studly($context)];
-        }
-
-        $matches = array_filter(array_keys($this->models), function ($key) use ($context) {
-            return Str::endsWith($key, '/'.Str::studly($context));
-        });
-
-        if (count($matches) === 1) {
-            return $this->models[$matches[0]];
-        }
-    }
-
-    private function registerModels(array $tree)
-    {
-        $this->models = array_merge($tree['cache'] ?? [], $tree['models'] ?? []);
     }
 }

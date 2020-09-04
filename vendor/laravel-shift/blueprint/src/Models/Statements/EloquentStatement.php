@@ -44,7 +44,7 @@ class EloquentStatement
         return $this->columns;
     }
 
-    public function output(string $controller_prefix, string $context): string
+    public function output(string $controller_prefix, string $context, bool $using_validation = false): string
     {
         $model = $this->determineModel($controller_prefix);
         $code = '';
@@ -54,21 +54,29 @@ class EloquentStatement
                 $code = "$" . Str::camel($model);
                 $code .= ' = ';
                 $code .= $model;
-                $code .= '::create($request->all());';
+
+                if ($using_validation) {
+                    $code .= '::create($request->validated());';
+                } else {
+                    $code .= '::create($request->all());';
+                }
             } else {
                 $code = "$" . Str::camel($model) . '->save();';
             }
         }
 
         if ($this->operation() == 'update') {
-            $columns = '';
             if (!empty($this->columns())) {
                 $columns = implode(', ', array_map(function ($column) {
                     return sprintf("'%s' => \$%s", $column, $column);
                 }, $this->columns()));
-            }
 
-            $code = "$" . Str::camel($model) . '->update([' . $columns . ']);';
+                $code = "$" . Str::camel($model) . '->update([' . $columns . ']);';
+            } elseif ($using_validation) {
+                $code = "$" . Str::camel($model) . '->update($request->validated());';
+            } else {
+                $code = "$" . Str::camel($model) . '->update([]);';
+            }
         }
 
         if ($this->operation() == 'find') {

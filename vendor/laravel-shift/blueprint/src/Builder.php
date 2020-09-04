@@ -6,17 +6,24 @@ use Illuminate\Filesystem\Filesystem;
 
 class Builder
 {
-    public static function execute(Blueprint $blueprint, Filesystem $files, string $draft)
+    public function execute(Blueprint $blueprint, Filesystem $files, string $draft, string $only = '', string $skip = '', $overwriteMigrations = false)
     {
         $cache = [];
         if ($files->exists('.blueprint')) {
             $cache = $blueprint->parse($files->get('.blueprint'));
         }
 
-        $tokens = $blueprint->parse($files->get($draft));
+        $contents = $files->get($draft);
+        $using_indexes = preg_match('/^\s+indexes:\R/m', $contents) !== 1;
+
+        $tokens = $blueprint->parse($contents, $using_indexes);
         $tokens['cache'] = $cache['models'] ?? [];
         $registry = $blueprint->analyze($tokens);
-        $generated = $blueprint->generate($registry);
+
+        $only = array_filter(explode(',', $only));
+        $skip = array_filter(explode(',', $skip));
+
+        $generated = $blueprint->generate($registry, $only, $skip, $overwriteMigrations);
 
         $models = array_merge($tokens['cache'], $tokens['models'] ?? []);
 

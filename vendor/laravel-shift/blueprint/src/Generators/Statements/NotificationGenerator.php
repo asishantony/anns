@@ -3,37 +3,29 @@
 namespace Blueprint\Generators\Statements;
 
 use Blueprint\Blueprint;
-use Blueprint\Contracts\Generator;
+use Blueprint\Generators\StatementGenerator;
 use Blueprint\Models\Statements\SendStatement;
+use Blueprint\Tree;
 
-class NotificationGenerator implements Generator
+class NotificationGenerator extends StatementGenerator
 {
-    /**
-     * @
- \Illuminate\Contracts\Filesystem\Filesystem
-     */
-    private $files;
+    protected $new_instance = 'new message instance';
 
-    public function __construct($files)
-    {
-        $this->files = $files;
-    }
-
-    public function output(array $tree): array
+    public function output(Tree $tree): array
     {
         $output = [];
 
         $stub = $this->files->stub('notification.stub');
 
         /** @var \Blueprint\Models\Controller $controller */
-        foreach ($tree['controllers'] as $controller) {
+        foreach ($tree->controllers() as $controller) {
             foreach ($controller->methods() as $method => $statements) {
                 foreach ($statements as $statement) {
-                    if (! $statement instanceof SendStatement) {
+                    if (!$statement instanceof SendStatement) {
                         continue;
                     }
 
-                    if (! $statement->isNotification()) {
+                    if (!$statement->isNotification()) {
                         continue;
                     }
 
@@ -57,6 +49,11 @@ class NotificationGenerator implements Generator
         return $output;
     }
 
+    public function types(): array
+    {
+        return ['controllers'];
+    }
+
     protected function getPath(string $name)
     {
         return Blueprint::appPath() . '/Notification/' . $name . '.php';
@@ -64,54 +61,10 @@ class NotificationGenerator implements Generator
 
     protected function populateStub(string $stub, SendStatement $sendStatement)
     {
-        $stub = str_replace('DummyNamespace', config('blueprint.namespace') . '\\Notification', $stub);
-        $stub = str_replace('DummyClass', $sendStatement->mail(), $stub);
-        $stub = str_replace('// properties...', $this->buildConstructor($sendStatement), $stub);
+        $stub = str_replace('{{ namespace }}', config('blueprint.namespace') . '\\Notification', $stub);
+        $stub = str_replace('{{ class }}', $sendStatement->mail(), $stub);
+        $stub = str_replace('{{ properties }}', $this->buildConstructor($sendStatement), $stub);
 
         return $stub;
-    }
-
-    private function buildConstructor(SendStatement $sendStatement)
-    {
-        static $constructor = null;
-
-        if (is_null($constructor)) {
-            $constructor = str_replace('new instance', 'new message instance', $this->files->stub('partials/constructor.stub'));
-        }
-
-        if (empty($sendStatement->data())) {
-            return trim($constructor);
-        }
-
-        $stub = $this->buildProperties($sendStatement->data()) . PHP_EOL . PHP_EOL;
-        $stub .= str_replace('__construct()', '__construct(' . $this->buildParameters($sendStatement->data()) . ')', $constructor);
-        $stub = str_replace('//', $this->buildAssignments($sendStatement->data()), $stub);
-
-        return $stub;
-    }
-
-    private function buildProperties(array $data)
-    {
-        return trim(array_reduce($data, function ($output, $property) {
-            $output .= '    public $' . $property . ';' . PHP_EOL . PHP_EOL;
-            return $output;
-        }, ''));
-    }
-
-    private function buildParameters(array $data)
-    {
-        $parameters = array_map(function ($parameter) {
-            return '$' . $parameter;
-        }, $data);
-
-        return implode(', ', $parameters);
-    }
-
-    private function buildAssignments(array $data)
-    {
-        return trim(array_reduce($data, function ($output, $property) {
-            $output .= '        $this->' . $property . ' = $' . $property . ';' . PHP_EOL;
-            return $output;
-        }, ''));
     }
 }
