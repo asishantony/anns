@@ -19,3 +19,4 @@ Route::get('/test', 'MainPageController@test')->name('test');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('admin/designation', 'DesignationController');

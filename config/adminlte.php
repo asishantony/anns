@@ -46,7 +46,7 @@ return [
     */
 
     'logo' => '',
-    // 'logo' => '<b>Anns</b>Clinic',
+    'logo' => '<b>Anns</b>Clinic',
     'logo_img' => 'images/main_page/logo.png',
     // 'logo_img_class' => 'brand-image img-circle elevation-3',
     // 'logo_img_xl' => null,
@@ -66,7 +66,7 @@ return [
     */
 
     'usermenu_enabled' => true,
-    'usermenu_header' => false,
+    'usermenu_header' => true,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => false,
     'usermenu_desc' => false,
@@ -88,7 +88,7 @@ return [
     'layout_boxed' => null,
     'layout_fixed_sidebar' => null,
     'layout_fixed_navbar' => null,
-    'layout_fixed_footer' => null,
+    'layout_fixed_footer' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -234,8 +234,18 @@ return [
     'menu' => [
         [
             'text' => 'search',
-            'search' => true,
+            'search' => false,
             'topnav' => true,
+        ],
+        'STAFF MANAGEMENT',
+        [
+            'text' => 'Designation',
+            'url'  => 'admin/designation',
+            'icon' => 'fas fa-fw fa-user',
+        ],   [
+            'text' => 'Staff',
+            'url'  => 'admin/staff',
+            'icon' => 'fas fa-fw fa-user',
         ],
         [
             'text' => 'blog',
@@ -352,7 +362,7 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
